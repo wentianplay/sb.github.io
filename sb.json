@@ -1,6 +1,16 @@
 {
   "diaries": [
     {
+      "title": "开学第二十八天",
+      "excerpt": "正在写",
+      "updateTime": "2025-10-09T13:00:00Z"
+    },
+    {
+      "title": "开学第二十七天",
+      "excerpt": "安全",
+      "updateTime": "2025-10-08T13:00:00Z"
+    },
+    {
       "title": "开学第二十六天",
       "excerpt": "正在写",
       "updateTime": "2025-09-29T13:00:00Z"
@@ -74,16 +84,6 @@
       "title": "开学第十二天",
       "excerpt": "安全",
       "updateTime": "2025-09-15T13:00:00Z"
-    },
-    {
-      "title": "。。。",
-      "excerpt": "安全",
-      "updateTime": "2025-09-14T13:00:00Z"
-    },
-    {
-      "title": "。。。",
-      "excerpt": "安全",
-      "updateTime": "2025-09-13T13:00:00Z"
     },
     {
       "title": "开学第十二天",
