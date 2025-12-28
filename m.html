@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="57">
+    <title>李文飞日记｜行知学校日记</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f0f8f5; color: #333; line-height: 1.6; }
+        :root {
+            --primary-color: #1abc9c;
+            --primary-dark: #16a085;
+            --light-bg: #e8f6f3;
+            --text-color: #2c3e50;
+            --light-text: #7f8c8d;
+            --border-color: #d1e8e2;
+        }
+        .announcement { background-color: var(--primary-color); color: white; padding: 0.8rem 2rem; text-align: center; font-weight: bold; }
+        header { background-color: var(--primary-dark); color: white; padding: 1.5rem 2rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        .container { max-width: 800px; margin: 0 auto; padding: 2rem; }
+        h1 { margin-bottom: 0.5rem; font-size: 2.5rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        .subtitle { color: #ecf0f1; font-weight: normal; font-size: 1.1rem; }
+        .refresh-info { background-color: var(--light-bg); padding: 10px; border-radius: 5px; text-align: center; margin: 1rem 0; color: var(--primary-dark); font-weight: bold; border: 1px dashed var(--primary-color); }
+        .news-list { display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem; }
+        .news-card { background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 15px rgba(0,0,0,0.08); transition: all 0.3s ease; border-left: 4px solid var(--primary-color); }
+        .news-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .news-content { padding: 1.8rem; }
+        .news-date { color: var(--primary-dark); font-size: 0.9rem; margin-bottom: 0.8rem; font-weight: 600; display: flex; align-items: center; }
+        .news-date::before { content: "📅"; margin-right: 8px; }
+        .news-title { font-size: 1.5rem; margin-bottom: 1.2rem; color: var(--text-color); border-bottom: 1px solid var(--border-color); padding-bottom: 0.8rem; }
+        .news-excerpt { color: var(--light-text); line-height: 1.7; margin-bottom: 1.5rem; font-size: 1.05rem; }
+        .read-more { display: inline-block; background-color: var(--primary-color); color: white; text-decoration: none; padding: 0.7rem 1.5rem; border-radius: 4px; font-weight: bold; transition: background-color 0.3s ease; border: none; cursor: pointer; font-size: 1rem; }
+        .read-more:hover { background-color: var(--primary-dark); }
+        .loading { text-align: center; padding: 2rem; font-size: 1.2rem; color: var(--light-text); }
+        footer { text-align: center; padding: 2rem; color: var(--light-text); font-size: 0.9rem; margin-top: 2rem; border-top: 1px solid var(--border-color); }
+        @media (max-width: 768px) {
+            .container { padding: 1rem; }
+            .announcement { padding: 0.8rem 1rem; font-size: 0.9rem; }
+            .news-content { padding: 1.2rem; }
+            .news-title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="announcement">李文飞学校日记 - 记录生活的点滴</div>
+    <header>
+        <div class="container">
+            <h1>李文飞日记</h1>
+            <p class="subtitle">天门市行知中等技术学校</p>
+        </div>
+    </header>
+    <div class="container">
+        <div class="refresh-info">页面每 57 秒自动刷新一次 | 最后刷新时间: <span id="refreshTime"></span></div>
+        <div class="news-list" id="newsList">
+            <div class="loading">加载日记中...</div>
+        </div>
+    </div>
+    <footer>
+        <p>李文飞日记 &copy; 2025 | 记录生活，珍藏回忆</p>
+    </footer>
+    <script>
+        // 显示当前刷新时间
+        function updateRefreshTime() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString();
+            document.getElementById('refreshTime').textContent = timeString;
+        }
+        updateRefreshTime();
+        setInterval(updateRefreshTime, 1000);
+
+        // 获取日记数据
+        fetch('sb.json')
+            .then(response => {
+                if (!response.ok) throw new Error('网络响应不正常，请稍后尝试。');
+                return response.json();
+            })
+            .then(diaryData => {
+                const newsList = document.getElementById('newsList');
+                newsList.innerHTML = '';
+
+                diaryData.diaries.forEach(diary => {
+                    const newsCard = document.createElement('div');
+                    newsCard.className = 'news-card';
+
+                    const date = new Date(diary.updateTime);
+                    const year = date.getFullYear();
+                    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                    const day = date.getDate().toString().padStart(2, '0');
+
+                    const formattedDate = `${year}年${month}月${day}日 ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+
+                    // 使用年月日生成跳转链接
+                    const filePath = `./s/${year}${month}${day}.html`;
+
+                    newsCard.innerHTML = `
+                        <div class="news-content">
+                            <div class="news-date">${formattedDate}</div>
+                            <h3 class="news-title">${diary.title}</h3>
+                            <p class="news-excerpt">${diary.excerpt}</p>
+                            <a href="${filePath}" class="read-more">阅读全文 →</a>
+                        </div>
+                    `;
+
+                    newsList.appendChild(newsCard);
+                });
+            })
+            .catch(error => {
+                const newsList = document.getElementById('newsList');
+                newsList.innerHTML = `<div class="loading">加载失败: ${error.message}</div>`;
+                console.error('获取日记数据时出错:', error);
+            });
+
+        // 每57秒刷新内容
+        setInterval(() => location.reload(), 57000);
+    </script>
+</body>
+</html>
